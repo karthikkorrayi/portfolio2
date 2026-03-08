@@ -35,7 +35,7 @@ export default function Contact() {
                 </a>
 
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+918968960269"
                   className="flex items-center gap-4 hover:text-blue-100 transition-colors group"
                 >
                   <div className="bg-white/20 p-3 rounded-lg group-hover:bg-white/30 transition-colors">
