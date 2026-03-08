@@ -6,7 +6,7 @@ export default function Experience() {
       title: 'Associate IT Consultant',
       company: 'ITC Infotech',
       location: 'Banglore, Karnataka, India',
-      period: 'Jan 2023 - Present',
+      period: 'Sept 2023 - Present',
       duration: '2.5 years',
       description: 'Leading development of microservices architecture and cloud-native applications.',
       achievements: [
@@ -21,7 +21,7 @@ export default function Experience() {
       title: 'Intern',
       company: 'Highradius',
       location: 'Remote',
-      period: 'Jan 2021 - Jun 2021',
+      period: 'Jan 2022 - Apr 2022',
       duration: '4 months',
       description: 'Contributed to product development and learned industry best practices.',
       achievements: [
