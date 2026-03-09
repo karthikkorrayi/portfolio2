@@ -189,17 +189,14 @@ jobs:
           name: debug-screenshot
           path: debug-screenshot.png
           if-no-files-found: ignore
-    
-      - name: Debug remote URL
-        run: |
-          git remote -v
-          echo "PAT set: ${{ secrets.PAT_TOKEN != '' }}"
 
       - name: Commit and push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+          echo "Remote URL after set:"
+          git remote -v
           git add public/images/profile.jpg
           git diff --cached --quiet && echo "No changes to commit" || \
           (git commit -m "Auto-update LinkedIn profile picture $(date +%Y-%m-%d)" && git push)
