@@ -40,8 +40,12 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         <div className="flex flex-col h-full overflow-y-auto">
           <div className="sticky top-0 bg-gradient-to-b from-slate-900 to-slate-800 p-8 border-b border-slate-700">
             <div className="mb-6">
-              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center shadow-2xl">
-                <User className="w-16 h-16 text-slate-900" />
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl">
+                <img
+                  src="/images/profile.jpg"
+                  alt="Karthik Korrayi"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             <h1 className="text-3xl font-bold mb-2 text-center">Karthik Korrayi</h1>

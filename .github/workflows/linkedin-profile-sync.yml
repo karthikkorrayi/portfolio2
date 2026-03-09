@@ -1,0 +1,26 @@
+name: Sync LinkedIn Profile Picture
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # runs once daily
+  workflow_dispatch:
+
+jobs:
+  update-profile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download LinkedIn profile image
+        run: |
+          curl -L "https://media.licdn.com/dms/image/v2/D5603AQEykEcVAJnQdQ/profile-displayphoto-crop_800_800/B56ZuIYnX7J8AI-/0/1767519715114?e=1774483200&v=beta&t=d9lbUB7ur7Shv5jL1JONouS98OA5TuMXsTalWYuI8XU" -o public/images/profile.jpg
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add public/images/profile.jpg
+          git commit -m "Auto update LinkedIn profile picture" || echo "No changes"
+          git push
