@@ -2,8 +2,8 @@ name: Sync LinkedIn Profile Picture
 
 on:
   schedule:
-    - cron: "0 0 * * 1"   # Every Monday at midnight
-  workflow_dispatch:        # Manual trigger anytime
+    - cron: "0 0 * * 1"   # Every Monday
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,99 +16,178 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch LinkedIn Voyager API
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright
         run: |
-          curl -s -L \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-            -H "Accept: application/vnd.linkedin.normalized+json+2.1" \
-            -H "Accept-Language: en-US,en;q=0.9" \
-            -H "Cookie: li_at=${{ secrets.LINKEDIN_COOKIE }}" \
-            -H "x-li-lang: en_US" \
-            -H "x-li-track: {\"clientVersion\":\"1.13.5517\"}" \
-            -H "x-restli-protocol-version: 2.0.0" \
-            -H "csrf-token: ajax:0123456789" \
-            "https://www.linkedin.com/voyager/api/identity/profiles/karthik-korrayi/profileView" \
-            -o linkedin.json
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
 
-      - name: Debug - Check raw response
+      - name: Fetch LinkedIn profile picture
+        env:
+          LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
+          LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
         run: |
-          echo "=== File size ==="
-          wc -c linkedin.json
-          echo "=== First 500 chars ==="
-          head -c 500 linkedin.json
+          node -e "
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const https = require('https');
+          const http = require('http');
+          const { URL } = require('url');
 
-      - name: Extract image URL via Python
-        run: |
-          IMAGE_URL=$(python3 -c "
-          import json, sys
+          function downloadFile(fileUrl, outputPath) {
+            return new Promise((resolve, reject) => {
+              const urlObj = new URL(fileUrl);
+              const protocol = urlObj.protocol === 'https:' ? https : http;
 
-          with open('linkedin.json') as f:
-              raw = f.read()
+              const file = fs.createWriteStream(outputPath);
+              protocol.get(fileUrl, (response) => {
+                if (response.statusCode === 301 || response.statusCode === 302) {
+                  file.close();
+                  downloadFile(response.headers.location, outputPath).then(resolve).catch(reject);
+                  return;
+                }
+                response.pipe(file);
+                file.on('finish', () => file.close(resolve));
+              }).on('error', (err) => {
+                fs.unlink(outputPath, () => {});
+                reject(err);
+              });
+            });
+          }
 
-          # Check if response is valid JSON
-          try:
-              data = json.loads(raw)
-          except json.JSONDecodeError:
-              print('ERROR: Not valid JSON', file=sys.stderr)
-              sys.exit(1)
+          (async () => {
+            const browser = await chromium.launch({
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
 
-          # Check if LinkedIn blocked us
-          if 'status' in data and data['status'] == 401:
-              print('ERROR: LinkedIn returned 401 - cookie expired', file=sys.stderr)
-              sys.exit(1)
+            const context = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              viewport: { width: 1280, height: 800 }
+            });
 
-          # Try to extract from nested VectorImage structure
-          def find_images(obj, results=[]):
-              if isinstance(obj, dict):
-                  if 'rootUrl' in obj and 'artifacts' in obj:
-                      root = obj['rootUrl']
-                      artifacts = obj['artifacts']
-                      if artifacts:
-                          largest = sorted(artifacts, key=lambda x: x.get('width', 0))[-1]
-                          path = largest.get('fileIdentifyingUrlPathSegment', '')
-                          if 'profile-displayphoto' in root or 'profile' in root:
-                              results.append(root + path)
-                  for v in obj.values():
-                      find_images(v, results)
-              elif isinstance(obj, list):
-                  for item in obj:
-                      find_images(item, results)
-              return results
+            const page = await context.newPage();
 
-          urls = find_images(data)
+            try {
+              console.log('Navigating to LinkedIn login...');
+              await page.goto('https://www.linkedin.com/login', { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.waitForTimeout(2000);
 
-          if not urls:
-              print('ERROR: No image URLs found in response', file=sys.stderr)
-              sys.exit(1)
+              console.log('Filling credentials...');
+              await page.fill('#username', process.env.LINKEDIN_EMAIL);
+              await page.waitForTimeout(500);
+              await page.fill('#password', process.env.LINKEDIN_PASSWORD);
+              await page.waitForTimeout(500);
+              await page.click('[type=submit]');
 
-          print(urls[0])
-          ")
+              console.log('Waiting for login redirect...');
+              await page.waitForURL(url => !url.includes('/login'), { timeout: 30000 });
+              await page.waitForTimeout(3000);
 
-          echo "Extracted URL: $IMAGE_URL"
-          echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+              console.log('Current URL after login:', page.url());
 
-      - name: Download profile image
-        run: |
-          curl -L \
-            -H "User-Agent: Mozilla/5.0" \
-            "$IMAGE_URL" \
-            -o public/images/profile.jpg
+              // Check for checkpoint/verification
+              if (page.url().includes('checkpoint') || page.url().includes('challenge')) {
+                console.error('LinkedIn is asking for verification. Try logging in manually once from this IP or use a different account.');
+                process.exit(1);
+              }
 
-      - name: Verify downloaded image
-        run: |
-          file public/images/profile.jpg
-          SIZE=$(wc -c < public/images/profile.jpg)
-          echo "File size: $SIZE bytes"
-          if [ "$SIZE" -lt 5000 ]; then
-            echo "ERROR: File too small — likely not a real image"
-            exit 1
-          fi
+              console.log('Navigating to profile...');
+              await page.goto('https://www.linkedin.com/in/karthik-korrayi/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.waitForTimeout(4000);
+
+              console.log('Searching for profile image...');
+
+              // Try multiple selectors LinkedIn uses
+              const selectors = [
+                'img.pv-top-card-profile-picture__image--show',
+                '.pv-top-card__photo img',
+                '.profile-photo-edit__preview',
+                'img[class*=\"profile-photo\"]',
+                'section.artdeco-card img.EntityPhoto-circle',
+                'img[class*=\"presence-entity\"]',
+                '.pv-top-card--list img',
+              ];
+
+              let imgUrl = null;
+
+              for (const selector of selectors) {
+                try {
+                  const el = await page.$(selector);
+                  if (el) {
+                    imgUrl = await el.getAttribute('src');
+                    if (imgUrl && imgUrl.includes('licdn.com') && !imgUrl.includes('ghost')) {
+                      console.log('Found image with selector:', selector);
+                      break;
+                    }
+                  }
+                } catch (e) {}
+              }
+
+              // Fallback: scan all img tags for licdn profile photo
+              if (!imgUrl) {
+                console.log('Trying fallback: scanning all images...');
+                imgUrl = await page.evaluate(() => {
+                  const imgs = Array.from(document.querySelectorAll('img'));
+                  const match = imgs.find(img =>
+                    img.src &&
+                    img.src.includes('licdn.com') &&
+                    img.src.includes('profile-displayphoto') &&
+                    img.naturalWidth > 100
+                  );
+                  return match ? match.src : null;
+                });
+              }
+
+              if (!imgUrl) {
+                // Take a screenshot to debug
+                await page.screenshot({ path: 'debug-screenshot.png', fullPage: false });
+                console.error('Could not find profile image URL. Debug screenshot saved.');
+                process.exit(1);
+              }
+
+              // Strip query params that might cause issues, keep the base URL
+              const cleanUrl = imgUrl.split('?')[0];
+              console.log('Downloading image from:', cleanUrl);
+
+              await downloadFile(imgUrl, 'public/images/profile.jpg');
+
+              const stats = fs.statSync('public/images/profile.jpg');
+              console.log('Downloaded file size:', stats.size, 'bytes');
+
+              if (stats.size < 5000) {
+                console.error('Downloaded file is too small — something went wrong.');
+                process.exit(1);
+              }
+
+              console.log('Profile picture updated successfully!');
+
+            } catch (err) {
+              console.error('Error:', err.message);
+              process.exit(1);
+            } finally {
+              await browser.close();
+            }
+          })();
+          "
+
+      - name: Upload debug screenshot if it exists
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: debug-screenshot.png
+          if-no-files-found: ignore
 
       - name: Commit and push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add public/images/profile.jpg
-          git diff --cached --quiet && echo "No changes to commit" || \
-          git commit -m "Auto-update LinkedIn profile picture $(date +%Y-%m-%d)"
-          git push
+          git diff --cached --quiet && echo "No changes — profile picture unchanged" || \
+          (git commit -m "Auto-update LinkedIn profile picture $(date +%Y-%m-%d)" && git push)
