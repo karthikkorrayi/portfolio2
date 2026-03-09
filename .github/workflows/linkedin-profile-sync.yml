@@ -16,19 +16,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch LinkedIn profile page (authenticated)
+      - name: Fetch LinkedIn profile page
         run: |
-          curl -L \
-          -H "User-Agent: Mozilla/5.0" \
-          -H "Cookie: li_at=${{ secrets.LINKEDIN_COOKIE }}" \
+          curl -L -H "User-Agent: Mozilla/5.0" \
           https://www.linkedin.com/in/karthik-korrayi/ \
           -o linkedin.html
 
       - name: Extract profile image URL
         run: |
-          IMAGE_URL=$(grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*' linkedin.html | head -n 1)
+          ROOT_URL=$(grep -oP '"rootUrl":"\Khttps://media\.licdn\.com[^"]+' linkedin.html | head -n 1)
+          IMAGE_PATH=$(grep -oP 'crop_800_800[^"]+' linkedin.html | head -n 1)
 
-          echo "Found image URL: $IMAGE_URL"
+          IMAGE_URL="${ROOT_URL}${IMAGE_PATH}"
+
+          echo "Root URL: $ROOT_URL"
+          echo "Image Path: $IMAGE_PATH"
+          echo "Final Image URL: $IMAGE_URL"
 
           if [ -z "$IMAGE_URL" ]; then
             echo "Image URL not found."
@@ -39,10 +42,13 @@ jobs:
 
       - name: Download profile image
         run: |
-          curl -L \
-          -H "User-Agent: Mozilla/5.0" \
+          curl -L -H "User-Agent: Mozilla/5.0" \
           "$IMAGE_URL" \
           -o public/images/profile.jpg
+
+      - name: Verify image file
+        run: |
+          file public/images/profile.jpg
 
       - name: Commit changes
         run: |
