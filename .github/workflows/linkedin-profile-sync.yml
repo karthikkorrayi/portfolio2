@@ -24,8 +24,14 @@ jobs:
 
       - name: Extract profile image URL
         run: |
-          IMAGE_URL=$(grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*' linkedin.html | head -n 1)
+          IMAGE_URL=$(grep -oP '(?<=property="og:image" content=")[^"]+' linkedin.html | head -n 1)
           echo "Found image URL: $IMAGE_URL"
+
+          if [ -z "$IMAGE_URL" ]; then
+            echo "Image URL not found. Exiting."
+            exit 1
+          fi
+
           echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
 
       - name: Download profile image
