@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { Code, Briefcase, GraduationCap, User, Mail, ExternalLink, Menu, X, Github, Linkedin } from 'lucide-react';
 
+interface ImportMetaEnv {
+  readonly BASE_URL: string;
+}
+
+declare global {
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
+
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
@@ -42,7 +52,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className="mb-6">
               <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl">
                 <img
-                  src="/images/profile.jpg"
+                  src={`${import.meta.env.BASE_URL}images/profile.jpg`}
                   alt="Karthik Korrayi"
                   className="w-full h-full object-cover"
                 />
