@@ -2,8 +2,8 @@ name: Sync LinkedIn Profile Picture
 
 on:
   schedule:
-    - cron: "0 */3 * * *"
-  workflow_dispatch:
+    - cron: "0 0 * * 1"   # Every Monday at midnight
+  workflow_dispatch:        # Manual trigger anytime
 
 permissions:
   contents: write
@@ -16,43 +16,99 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch LinkedIn profile page
+      - name: Fetch LinkedIn Voyager API
         run: |
-          curl -L \
-            -H "User-Agent: Mozilla/5.0" \
+          curl -s -L \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            -H "Accept: application/vnd.linkedin.normalized+json+2.1" \
+            -H "Accept-Language: en-US,en;q=0.9" \
             -H "Cookie: li_at=${{ secrets.LINKEDIN_COOKIE }}" \
-            -H "csrf-token: ajax:123456789" \
+            -H "x-li-lang: en_US" \
+            -H "x-li-track: {\"clientVersion\":\"1.13.5517\"}" \
+            -H "x-restli-protocol-version: 2.0.0" \
+            -H "csrf-token: ajax:0123456789" \
             "https://www.linkedin.com/voyager/api/identity/profiles/karthik-korrayi/profileView" \
             -o linkedin.json
 
-      - name: Extract profile image URL
+      - name: Debug - Check raw response
         run: |
-          ROOT_URL=$(grep -oP '"rootUrl":"\Khttps://media\.licdn\.com[^"]+' linkedin.json | head -n 1)
-          IMAGE_PATH=$(grep -oP 'crop_800_800[^"]+' linkedin.json | head -n 1)
+          echo "=== File size ==="
+          wc -c linkedin.json
+          echo "=== First 500 chars ==="
+          head -c 500 linkedin.json
 
-          IMAGE_URL="${ROOT_URL}${IMAGE_PATH}"
+      - name: Extract image URL via Python
+        run: |
+          IMAGE_URL=$(python3 -c "
+          import json, sys
 
-          echo "Final Image URL: $IMAGE_URL"
+          with open('linkedin.json') as f:
+              raw = f.read()
 
-          if [ -z "$IMAGE_URL" ]; then
-            echo "Image URL not found."
-            exit 1
-          fi
+          # Check if response is valid JSON
+          try:
+              data = json.loads(raw)
+          except json.JSONDecodeError:
+              print('ERROR: Not valid JSON', file=sys.stderr)
+              sys.exit(1)
 
+          # Check if LinkedIn blocked us
+          if 'status' in data and data['status'] == 401:
+              print('ERROR: LinkedIn returned 401 - cookie expired', file=sys.stderr)
+              sys.exit(1)
+
+          # Try to extract from nested VectorImage structure
+          def find_images(obj, results=[]):
+              if isinstance(obj, dict):
+                  if 'rootUrl' in obj and 'artifacts' in obj:
+                      root = obj['rootUrl']
+                      artifacts = obj['artifacts']
+                      if artifacts:
+                          largest = sorted(artifacts, key=lambda x: x.get('width', 0))[-1]
+                          path = largest.get('fileIdentifyingUrlPathSegment', '')
+                          if 'profile-displayphoto' in root or 'profile' in root:
+                              results.append(root + path)
+                  for v in obj.values():
+                      find_images(v, results)
+              elif isinstance(obj, list):
+                  for item in obj:
+                      find_images(item, results)
+              return results
+
+          urls = find_images(data)
+
+          if not urls:
+              print('ERROR: No image URLs found in response', file=sys.stderr)
+              sys.exit(1)
+
+          print(urls[0])
+          ")
+
+          echo "Extracted URL: $IMAGE_URL"
           echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
 
       - name: Download profile image
         run: |
-          curl -L "$IMAGE_URL" -o public/images/profile.jpg
+          curl -L \
+            -H "User-Agent: Mozilla/5.0" \
+            "$IMAGE_URL" \
+            -o public/images/profile.jpg
 
-      - name: Verify image file
+      - name: Verify downloaded image
         run: |
           file public/images/profile.jpg
+          SIZE=$(wc -c < public/images/profile.jpg)
+          echo "File size: $SIZE bytes"
+          if [ "$SIZE" -lt 5000 ]; then
+            echo "ERROR: File too small — likely not a real image"
+            exit 1
+          fi
 
-      - name: Commit changes
+      - name: Commit and push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add public/images/profile.jpg
-          git commit -m "Auto update LinkedIn profile picture $(date)" || true
+          git diff --cached --quiet && echo "No changes to commit" || \
+          git commit -m "Auto-update LinkedIn profile picture $(date +%Y-%m-%d)"
           git push
