@@ -52,7 +52,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className="mb-6">
               <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl">
                 <img
-                  src={`${import.meta.env.BASE_URL}images/profile.jpg`}
+                  src={`${import.meta.env.BASE_URL}images/profile.jpg?v=${Date.now()}`}
                   alt="Karthik Korrayi"
                   className="w-full h-full object-cover"
                 />
