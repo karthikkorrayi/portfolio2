@@ -18,19 +18,20 @@ jobs:
 
       - name: Fetch LinkedIn profile page
         run: |
-          curl -L -H "User-Agent: Mozilla/5.0" \
-          https://www.linkedin.com/in/karthik-korrayi/ \
-          -o linkedin.html
+          curl -L \
+            -H "User-Agent: Mozilla/5.0" \
+            -H "Cookie: li_at=${{ secrets.LINKEDIN_COOKIE }}" \
+            -H "csrf-token: ajax:123456789" \
+            "https://www.linkedin.com/voyager/api/identity/profiles/karthik-korrayi/profileView" \
+            -o linkedin.json
 
       - name: Extract profile image URL
         run: |
-          ROOT_URL=$(grep -oP '"rootUrl":"\Khttps://media\.licdn\.com[^"]+' linkedin.html | head -n 1)
-          IMAGE_PATH=$(grep -oP 'crop_800_800[^"]+' linkedin.html | head -n 1)
+          ROOT_URL=$(grep -oP '"rootUrl":"\Khttps://media\.licdn\.com[^"]+' linkedin.json | head -n 1)
+          IMAGE_PATH=$(grep -oP 'crop_800_800[^"]+' linkedin.json | head -n 1)
 
           IMAGE_URL="${ROOT_URL}${IMAGE_PATH}"
 
-          echo "Root URL: $ROOT_URL"
-          echo "Image Path: $IMAGE_PATH"
           echo "Final Image URL: $IMAGE_URL"
 
           if [ -z "$IMAGE_URL" ]; then
@@ -42,9 +43,7 @@ jobs:
 
       - name: Download profile image
         run: |
-          curl -L -H "User-Agent: Mozilla/5.0" \
-          "$IMAGE_URL" \
-          -o public/images/profile.jpg
+          curl -L "$IMAGE_URL" -o public/images/profile.jpg
 
       - name: Verify image file
         run: |
