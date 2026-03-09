@@ -16,9 +16,29 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download LinkedIn profile image
+      - name: Install dependencies
+        run: sudo apt-get install -y pup
+
+      - name: Fetch LinkedIn profile page
         run: |
-          curl -L "https://media.licdn.com/dms/image/v2/D5603AQFKBG34d4gFHg/profile-displayphoto-crop_800_800/B56ZzS2k4yKEAI-/0/1773064048892?e=1774483200&v=beta&t=6FKdR6Y_Av3jfgK44wugTSPUFaRzx0Ce5cGgCa_ra5A" -o public/images/profile.jpg
+          curl -L -H "User-Agent: Mozilla/5.0" \
+          https://www.linkedin.com/in/karthik-korrayi/ \
+          -o linkedin.html
+
+      - name: Extract profile image URL
+        run: |
+          IMAGE_URL=$(cat linkedin.html | grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*')
+          echo "Found image URL: $IMAGE_URL"
+          echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+
+      - name: Download profile image
+        run: |
+          curl -L -H "User-Agent: Mozilla/5.0" \
+          "$IMAGE_URL" \
+          -o public/images/profile.jpg
+
+      - name: Verify image
+        run: file public/images/profile.jpg
 
       - name: Commit changes
         run: |
