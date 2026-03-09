@@ -18,7 +18,7 @@ jobs:
 
       - name: Download LinkedIn profile image
         run: |
-          curl -L "https://media.licdn.com/dms/image/v2/D5603AQEykEcVAJnQdQ/profile-displayphoto-crop_800_800/B56ZuIYnX7J8AI-/0/1767519715114?e=1774483200&v=beta&t=d9lbUB7ur7Shv5jL1JONouS98OA5TuMXsTalWYuI8XU" -o public/images/profile.jpg
+          curl -L "https://media.licdn.com/dms/image/v2/D5603AQFKBG34d4gFHg/profile-displayphoto-crop_800_800/B56ZzS2k4yKEAI-/0/1773064048892?e=1774483200&v=beta&t=6FKdR6Y_Av3jfgK44wugTSPUFaRzx0Ce5cGgCa_ra5A" -o public/images/profile.jpg
 
       - name: Commit changes
         run: |
