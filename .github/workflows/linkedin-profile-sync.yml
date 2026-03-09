@@ -2,7 +2,7 @@ name: Sync LinkedIn Profile Picture
 
 on:
   schedule:
-    - cron: "0 0 * * 1"   # Every Monday
+    - cron: "0 0 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -27,12 +27,9 @@ jobs:
           npm install playwright
           npx playwright install chromium --with-deps
 
-      - name: Fetch LinkedIn profile picture
-        env:
-          LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
-          LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+      - name: Write scraper script
         run: |
-          node -e "
+          cat > scraper.js << 'SCRAPER_EOF'
           const { chromium } = require('playwright');
           const fs = require('fs');
           const https = require('https');
@@ -43,7 +40,6 @@ jobs:
             return new Promise((resolve, reject) => {
               const urlObj = new URL(fileUrl);
               const protocol = urlObj.protocol === 'https:' ? https : http;
-
               const file = fs.createWriteStream(outputPath);
               protocol.get(fileUrl, (response) => {
                 if (response.statusCode === 301 || response.statusCode === 302) {
@@ -75,7 +71,10 @@ jobs:
 
             try {
               console.log('Navigating to LinkedIn login...');
-              await page.goto('https://www.linkedin.com/login', { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.goto('https://www.linkedin.com/login', {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+              });
               await page.waitForTimeout(2000);
 
               console.log('Filling credentials...');
@@ -85,33 +84,35 @@ jobs:
               await page.waitForTimeout(500);
               await page.click('[type=submit]');
 
-              console.log('Waiting for login redirect...');
+              console.log('Waiting for login...');
               await page.waitForURL(url => !url.includes('/login'), { timeout: 30000 });
               await page.waitForTimeout(3000);
 
-              console.log('Current URL after login:', page.url());
+              const currentUrl = page.url();
+              console.log('Current URL after login:', currentUrl);
 
-              // Check for checkpoint/verification
-              if (page.url().includes('checkpoint') || page.url().includes('challenge')) {
-                console.error('LinkedIn is asking for verification. Try logging in manually once from this IP or use a different account.');
+              if (currentUrl.includes('checkpoint') || currentUrl.includes('challenge')) {
+                await page.screenshot({ path: 'debug-screenshot.png' });
+                console.error('LinkedIn verification required. See debug screenshot.');
                 process.exit(1);
               }
 
               console.log('Navigating to profile...');
-              await page.goto('https://www.linkedin.com/in/karthik-korrayi/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.goto('https://www.linkedin.com/in/karthik-korrayi/', {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+              });
               await page.waitForTimeout(4000);
 
               console.log('Searching for profile image...');
 
-              // Try multiple selectors LinkedIn uses
               const selectors = [
                 'img.pv-top-card-profile-picture__image--show',
                 '.pv-top-card__photo img',
                 '.profile-photo-edit__preview',
-                'img[class*=\"profile-photo\"]',
                 'section.artdeco-card img.EntityPhoto-circle',
-                'img[class*=\"presence-entity\"]',
-                '.pv-top-card--list img',
+                'img[class*="profile-photo"]',
+                'img[class*="presence-entity"]',
               ];
 
               let imgUrl = null;
@@ -120,16 +121,18 @@ jobs:
                 try {
                   const el = await page.$(selector);
                   if (el) {
-                    imgUrl = await el.getAttribute('src');
-                    if (imgUrl && imgUrl.includes('licdn.com') && !imgUrl.includes('ghost')) {
+                    const src = await el.getAttribute('src');
+                    if (src && src.includes('licdn.com') && !src.includes('ghost')) {
+                      imgUrl = src;
                       console.log('Found image with selector:', selector);
                       break;
                     }
                   }
-                } catch (e) {}
+                } catch (e) {
+                  // try next selector
+                }
               }
 
-              // Fallback: scan all img tags for licdn profile photo
               if (!imgUrl) {
                 console.log('Trying fallback: scanning all images...');
                 imgUrl = await page.evaluate(() => {
@@ -145,23 +148,19 @@ jobs:
               }
 
               if (!imgUrl) {
-                // Take a screenshot to debug
                 await page.screenshot({ path: 'debug-screenshot.png', fullPage: false });
-                console.error('Could not find profile image URL. Debug screenshot saved.');
+                console.error('Could not find profile image. Debug screenshot saved.');
                 process.exit(1);
               }
 
-              // Strip query params that might cause issues, keep the base URL
-              const cleanUrl = imgUrl.split('?')[0];
-              console.log('Downloading image from:', cleanUrl);
-
+              console.log('Downloading image from:', imgUrl);
               await downloadFile(imgUrl, 'public/images/profile.jpg');
 
               const stats = fs.statSync('public/images/profile.jpg');
               console.log('Downloaded file size:', stats.size, 'bytes');
 
               if (stats.size < 5000) {
-                console.error('Downloaded file is too small — something went wrong.');
+                console.error('Downloaded file is too small — likely not a real image.');
                 process.exit(1);
               }
 
@@ -169,14 +168,21 @@ jobs:
 
             } catch (err) {
               console.error('Error:', err.message);
+              await page.screenshot({ path: 'debug-screenshot.png' }).catch(() => {});
               process.exit(1);
             } finally {
               await browser.close();
             }
           })();
-          "
+          SCRAPER_EOF
 
-      - name: Upload debug screenshot if it exists
+      - name: Run scraper
+        env:
+          LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
+          LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+        run: node scraper.js
+
+      - name: Upload debug screenshot on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -189,5 +195,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add public/images/profile.jpg
-          git diff --cached --quiet && echo "No changes — profile picture unchanged" || \
+          git diff --cached --quiet && echo "No changes to commit" || \
           (git commit -m "Auto-update LinkedIn profile picture $(date +%Y-%m-%d)" && git push)
