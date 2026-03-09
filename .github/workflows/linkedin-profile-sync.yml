@@ -16,17 +16,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch LinkedIn profile page
+      - name: Fetch LinkedIn OpenGraph preview
         run: |
           curl -L \
-          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
-          -H "Accept-Language: en-US,en;q=0.9" \
-          https://www.linkedin.com/in/karthik-korrayi/ \
+          -H "User-Agent: Mozilla/5.0" \
+          "https://www.linkedin.com/sharing/share-offsite/?url=https://www.linkedin.com/in/karthik-korrayi/" \
           -o linkedin.html
 
       - name: Extract profile image URL
         run: |
-          IMAGE_URL=$(grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*' linkedin.html | head -n 1)
+          IMAGE_URL=$(grep -oP '(?<=property="og:image" content=")[^"]+' linkedin.html | head -n 1)
 
           echo "Found image URL: $IMAGE_URL"
 
@@ -39,13 +38,10 @@ jobs:
 
       - name: Download profile image
         run: |
-          curl -L -H "User-Agent: Mozilla/5.0" \
+          curl -L \
+          -H "User-Agent: Mozilla/5.0" \
           "$IMAGE_URL" \
           -o public/images/profile.jpg
-
-      - name: Verify image file
-        run: |
-          file public/images/profile.jpg
 
       - name: Commit changes
         run: |
