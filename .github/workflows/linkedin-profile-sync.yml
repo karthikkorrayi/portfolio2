@@ -2,7 +2,7 @@ name: Sync LinkedIn Profile Picture
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 */3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -16,9 +16,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: sudo apt-get install -y pup
-
       - name: Fetch LinkedIn profile page
         run: |
           curl -L -H "User-Agent: Mozilla/5.0" \
@@ -27,7 +24,7 @@ jobs:
 
       - name: Extract profile image URL
         run: |
-          IMAGE_URL=$(cat linkedin.html | grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*')
+          IMAGE_URL=$(grep -o 'https://media.licdn.com[^"]*profile-displayphoto[^"]*' linkedin.html | head -n 1)
           echo "Found image URL: $IMAGE_URL"
           echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
 
@@ -37,8 +34,9 @@ jobs:
           "$IMAGE_URL" \
           -o public/images/profile.jpg
 
-      - name: Verify image
-        run: file public/images/profile.jpg
+      - name: Verify image file
+        run: |
+          file public/images/profile.jpg
 
       - name: Commit changes
         run: |
