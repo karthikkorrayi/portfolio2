@@ -189,6 +189,11 @@ jobs:
           name: debug-screenshot
           path: debug-screenshot.png
           if-no-files-found: ignore
+    
+      - name: Debug remote URL
+        run: |
+          git remote -v
+          echo "PAT set: ${{ secrets.PAT_TOKEN != '' }}"
 
       - name: Commit and push
         run: |
