@@ -82,7 +82,7 @@ function App() {
     <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
       <Sidebar activeSection={activeSection} onSectionChange={handleSectionChange} />
 
-      <main ref={mainRef} className="flex-1 md:ml-80 overflow-y-auto scroll-smooth">
+      <main ref={mainRef} className="flex-1 overflow-y-auto scroll-smooth pt-24 pb-28 md:ml-80 md:pt-0 md:pb-0">
         <div className="min-h-screen">
           <About isDarkMode={isDarkMode} onThemeToggle={handleThemeToggle} />
           <Skills />
