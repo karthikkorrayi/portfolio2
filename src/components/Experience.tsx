@@ -35,8 +35,8 @@ export default function Experience() {
   ];
 
   return (
-    <section id="experience" className="py-16 px-6 sm:px-8 lg:px-12">
-      <div className="max-w-4xl">
+    <section id="experience" className="section-shell pattern-grid py-16 px-6 sm:px-8 lg:px-12">
+      <div className="relative z-10 max-w-4xl">
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
             <div className="w-1 h-10 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full"></div>

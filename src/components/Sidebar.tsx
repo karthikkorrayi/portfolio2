@@ -83,8 +83,8 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div className="flex flex-col h-full overflow-y-auto">
-          <div className="sticky top-0 bg-gradient-to-b from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 p-8 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex h-full flex-col">
+          <div className="bg-gradient-to-b from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 p-8 border-b border-slate-200 dark:border-slate-700">
             <div className="mb-6">
               <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-2xl">
                 <img
@@ -118,7 +118,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             ))}
           </nav>
 
-          <div className="sticky bottom-0 bg-gradient-to-t from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6 border-t border-slate-200 dark:border-slate-700">
+          <div className="bg-gradient-to-t from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6 border-t border-slate-200 dark:border-slate-700">
             <p className="text-slate-500 dark:text-slate-400 text-xs mb-4 text-center">Connect With Me</p>
             <div className="flex justify-center gap-4">
               <a

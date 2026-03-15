@@ -2,7 +2,7 @@ import { Mail, Linkedin, Github, Phone, MapPin, Send } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
+    <section id="contact" className="section-shell pattern-grid py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center justify-center gap-3">

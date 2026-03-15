@@ -9,9 +9,9 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
   return (
     <section
       id="about"
-      className="py-20 px-6 sm:px-10 lg:px-16 transition-colors duration-500"
+      className="section-shell pattern-zigzag py-20 px-6 sm:px-10 lg:px-16 transition-colors duration-500"
     >
-      <div className="max-w-4xl">
+      <div className="relative z-10 max-w-4xl">
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
