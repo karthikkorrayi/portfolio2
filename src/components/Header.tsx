@@ -34,7 +34,7 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'
+        isScrolled ? 'bg-white dark:bg-slate-800 shadow-md py-4' : 'bg-transparent py-6'
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -42,7 +42,7 @@ export default function Header() {
           href="#hero"
           onClick={(e) => scrollToSection(e, '#hero')}
           className={`text-xl font-bold transition-colors ${
-            isScrolled ? 'text-slate-900' : 'text-white'
+            isScrolled ? 'text-slate-900 dark:text-slate-100' : 'text-white'
           }`}
         >
           KK
@@ -55,7 +55,7 @@ export default function Header() {
               href={item.href}
               onClick={(e) => scrollToSection(e, item.href)}
               className={`font-medium transition-colors hover:text-blue-600 ${
-                isScrolled ? 'text-slate-700' : 'text-white hover:text-blue-100'
+                isScrolled ? 'text-slate-700 dark:text-slate-300' : 'text-white hover:text-blue-100'
               }`}
             >
               {item.name}
@@ -65,21 +65,21 @@ export default function Header() {
 
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={`md:hidden ${isScrolled ? 'text-slate-900' : 'text-white'}`}
+          className={`md:hidden ${isScrolled ? 'text-slate-900 dark:text-slate-100' : 'text-white'}`}
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </nav>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg">
+        <div className="md:hidden bg-white dark:bg-slate-800 shadow-lg">
           <div className="px-4 py-4 space-y-3">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
                 onClick={(e) => scrollToSection(e, item.href)}
-                className="block text-slate-700 font-medium hover:text-blue-600 transition-colors"
+                className="block text-slate-700 dark:text-slate-300 font-medium hover:text-blue-600 transition-colors"
               >
                 {item.name}
               </a>

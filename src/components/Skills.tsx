@@ -44,11 +44,11 @@ export default function Skills() {
     <section id="skills" className="py-16 px-6 sm:px-8 lg:px-12">
       <div className="max-w-4xl">
         <div className="mb-12">
-          <h2 className="text-4xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
             <div className="w-1 h-10 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full"></div>
             Technical Skills
           </h2>
-          <p className="text-slate-600">Expertise across multiple technologies and platforms</p>
+          <p className="text-slate-600 dark:text-slate-300">Expertise across multiple technologies and platforms</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6">
@@ -57,9 +57,9 @@ export default function Skills() {
             return (
               <div
                 key={idx}
-                className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all transform hover:-translate-y-1"
+                className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all transform hover:-translate-y-1"
               >
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{category.title}</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">{category.title}</h3>
                 <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill, skillIdx) => (
                     <span

@@ -42,18 +42,18 @@ export default function Projects() {
     <section id="projects" className="py-16 px-6 sm:px-8 lg:px-12">
       <div className="max-w-4xl">
         <div className="mb-12">
-          <h2 className="text-4xl font-bold text-slate-900 mb-2 flex items-center gap-3">
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
             <div className="w-1 h-10 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full"></div>
             Featured Projects
           </h2>
-          <p className="text-slate-600">Key projects showcasing technical expertise and impact</p>
+          <p className="text-slate-600 dark:text-slate-300">Key projects showcasing technical expertise and impact</p>
         </div>
 
         <div className="space-y-6">
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 overflow-hidden shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
+              className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
             >
               <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
@@ -62,11 +62,11 @@ export default function Projects() {
 
               <div className="p-6 space-y-6">
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
                     <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                     Objectives
                   </h4>
-                  <ul className="space-y-1 text-slate-700">
+                  <ul className="space-y-1 text-slate-700 dark:text-slate-300">
                     {project.objectives.map((obj, objIdx) => (
                       <li key={objIdx} className="flex items-start gap-2 text-sm">
                         <span className="text-blue-600 mt-0.5">•</span>
@@ -77,11 +77,11 @@ export default function Projects() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
                     <span className="w-2 h-2 bg-emerald-600 rounded-full"></span>
                     Outcomes
                   </h4>
-                  <ul className="space-y-1 text-slate-700">
+                  <ul className="space-y-1 text-slate-700 dark:text-slate-300">
                     {project.outcomes.map((outcome, outIdx) => (
                       <li key={outIdx} className="flex items-start gap-2 text-sm">
                         <span className="text-emerald-600 mt-0.5">✓</span>
@@ -92,12 +92,12 @@ export default function Projects() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-3">Technologies Used:</h4>
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Technologies Used:</h4>
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.map((tech, techIdx) => (
                       <span
                         key={techIdx}
-                        className="px-3 py-1 bg-white text-slate-700 rounded-lg text-sm font-medium border border-slate-300"
+                        className="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium border border-slate-300 dark:border-slate-600"
                       >
                         {tech}
                       </span>

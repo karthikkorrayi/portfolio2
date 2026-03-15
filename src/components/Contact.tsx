@@ -2,15 +2,15 @@ import { Mail, Linkedin, Github, Phone, MapPin, Send } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 flex items-center justify-center gap-3">
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center justify-center gap-3">
             <Send className="w-10 h-10 text-blue-600" />
             Get In Touch
           </h2>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-600 dark:text-slate-300 text-lg max-w-2xl mx-auto">
             I'm currently seeking new opportunities and would love to hear from you.
             Whether you have a question or just want to connect, feel free to reach out!
           </p>
@@ -48,7 +48,7 @@ export default function Contact() {
                 </a>
 
                 <div className="flex items-center gap-4">
-                  <div className="bg-white/20 p-3 rounded-lg">
+                  <div className="bg-white dark:bg-slate-800/20 p-3 rounded-lg">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -59,14 +59,14 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-slate-900 rounded-xl p-8 text-white shadow-xl">
+            <div className="bg-slate-100 dark:bg-slate-900 rounded-xl p-8 text-slate-900 dark:text-white shadow-xl">
               <h3 className="text-xl font-bold mb-4">Connect With Me</h3>
               <div className="space-y-3">
                 <a
                   href="https://linkedin.com/in/karthik-korrayi/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-white/10 dark:bg-slate-800/40 rounded-lg hover:bg-white/20 dark:hover:bg-slate-700/70 transition-colors"
                 >
                   <Linkedin className="w-5 h-5 text-blue-400" />
                   <span>linkedin.com/in/karthik-korrayi</span>
@@ -75,7 +75,7 @@ export default function Contact() {
                   href="https://github.com/karthikkorrayi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-white/10 dark:bg-slate-800/40 rounded-lg hover:bg-white/20 dark:hover:bg-slate-700/70 transition-colors"
                 >
                   <Github className="w-5 h-5" />
                   <span>github.com/karthikkorrayi</span>
@@ -84,53 +84,53 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-8 border border-slate-200 shadow-lg">
-            <h3 className="text-2xl font-bold text-slate-900 mb-6">Send a Message</h3>
+          <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Send a Message</h3>
             <form className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Your Name
                 </label>
                 <input
                   type="text"
                   id="name"
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                   placeholder="Karthik Korrayi"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Your Email
                 </label>
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                   placeholder="karthikkorrayii@gmail.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="subject" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Subject
                 </label>
                 <input
                   type="text"
                   id="subject"
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                   placeholder="Job Opportunity"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Message
                 </label>
                 <textarea
                   id="message"
                   rows={5}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all resize-none"
                   placeholder="Tell me about the opportunity..."
                 ></textarea>
               </div>
