@@ -48,8 +48,8 @@ export default function Contact() {
                 </a>
 
                 <div className="flex items-center gap-4">
-                  <div className="bg-white dark:bg-slate-800/20 p-3 rounded-lg">
-                    <MapPin className="w-5 h-5" />
+                  <div className="rounded-lg bg-white/20 p-3 text-white">
+                    <MapPin className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-sm text-blue-100">Location</p>
@@ -77,14 +77,14 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 bg-white/10 dark:bg-slate-800/40 rounded-lg hover:bg-white/20 dark:hover:bg-slate-700/70 transition-colors"
                 >
-                  <Github className="w-5 h-5" />
+                  <Github className="w-5 h-5 text-slate-700 dark:text-slate-200" />
                   <span>github.com/karthikkorrayi</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
+          {/* <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
             <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Send a Message</h3>
             <form className="space-y-4">
               <div>
@@ -143,7 +143,7 @@ export default function Contact() {
                 Send Message
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

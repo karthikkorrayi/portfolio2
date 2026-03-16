@@ -24,34 +24,14 @@ const EXPERIENCE_START_DATE = new Date('2023-09-01T00:00:00');
 
 const calculateExperience = () => {
   const now = new Date();
+  const elapsedMs = now.getTime() - EXPERIENCE_START_DATE.getTime();
 
-  let years = now.getFullYear() - EXPERIENCE_START_DATE.getFullYear();
-  let months = now.getMonth() - EXPERIENCE_START_DATE.getMonth();
+  if (elapsedMs <= 0) {
+    return '0.0 years';
+};
 
-  if (now.getDate() < EXPERIENCE_START_DATE.getDate()) {
-    months -= 1;
-  }
-
-  if (months < 0) {
-    years -= 1;
-  }
-
-  if (years < 0) {
-    return '0 months';
-  }
-
-  const yearLabel = years === 1 ? 'year' : '.';
-  const monthLabel = months === 1 ? 'month' : 'years';
-
-  if (years === 0) {
-    return `${months} ${monthLabel}`;
-  }
-
-  if (months === 0) {
-    return `${years} ${yearLabel}`;
-  }
-
-  return `${years} ${yearLabel} ${months} ${monthLabel}`;
+  const years = elapsedMs / (1000 * 60 * 60 * 24 * 365.25);
+  return `${years.toFixed(1)} years`;
 };
 
 interface SidebarProps {

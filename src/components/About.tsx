@@ -57,8 +57,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
               <div>
                 <h3 className="text-2xl font-bold mb-3">Hello, I'm Karthik!</h3>
                 <p className="text-blue-50 leading-relaxed">
-                  I'm a passionate IT professional with a foundation in Computer Engineering
-                  and 2.6 years of experience in IT. My journey in
+                  I'm a passionate IT professional with a foundation in Computer Engineering. My journey in
                   technology has equipped me with expertise in full-stack development, cloud infrastructure,
                   and modern DevOps practices.
                 </p>
@@ -97,7 +96,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
                   <Target className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Career Goals</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">2+ Years of Experience</h3>
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[15px]">
                     Seeking challenging opportunities in software engineering where I can leverage my
                     experience in building scalable applications, contribute to innovative projects, and
@@ -107,7 +106,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
               </div>
             </div>
 
-            <div className="
+            {/* <div className="
               bg-white/70 dark:bg-slate-800/70
               backdrop-blur-md
               rounded-xl
@@ -131,7 +130,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

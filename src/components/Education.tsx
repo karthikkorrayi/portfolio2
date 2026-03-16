@@ -1,4 +1,4 @@
-import { GraduationCap, Award, BookOpen } from 'lucide-react';
+import { GraduationCap, Award } from 'lucide-react';
 
 export default function Education() {
   return (
