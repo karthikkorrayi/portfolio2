@@ -126,8 +126,8 @@ const skillIconMap: Record<string, LucideIcon> = {
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-shell pattern-dots py-16 px-6 sm:px-8 lg:px-12">
-      <div className="relative z-10 max-w-6xl">
+    <section id="skills" className="section-shell pattern-dots px-4 py-16 sm:px-8 lg:px-12">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
             <div className="w-1 h-10 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full"></div>

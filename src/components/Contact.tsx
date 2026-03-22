@@ -1,9 +1,9 @@
-import { Mail, Linkedin, Github, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Linkedin, Github, Phone, MapPin, Send, FilePenLine } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <section id="contact" className="section-shell pattern-grid py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-800">
-      <div className="max-w-6xl mx-auto">
+    <section id="contact" className="section-shell pattern-grid bg-white px-4 py-16 dark:bg-slate-800 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-6xl">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center justify-center gap-3">
             <Send className="w-10 h-10 text-blue-600" />
@@ -16,7 +16,7 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid gap-8 xl:grid-cols-[1.2fr_1fr] xl:gap-12">
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl p-8 text-white shadow-xl">
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
@@ -59,8 +59,8 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-slate-100 dark:bg-slate-900 rounded-xl p-8 text-slate-900 dark:text-white shadow-xl">
-              <h3 className="text-xl font-bold mb-4">Connect With Me</h3>
+            <div className="rounded-xl bg-slate-100 p-8 text-slate-900 shadow-xl dark:bg-slate-900 dark:text-white">
+              <h3 className="mb-4 text-xl font-bold">Profiles</h3>
               <div className="space-y-3">
                 <a
                   href="https://linkedin.com/in/karthik-korrayi/"
@@ -78,7 +78,16 @@ export default function Contact() {
                   className="flex items-center gap-3 p-3 bg-white/10 dark:bg-slate-800/40 rounded-lg hover:bg-white/20 dark:hover:bg-slate-700/70 transition-colors"
                 >
                   <Github className="w-5 h-5 text-slate-700 dark:text-slate-200" />
-                  <span>github.com/karthikkorrayi</span>
+                  <span>GitHub Profile</span>
+                </a>
+                <a
+                  href="https://dev.to/karthikkorrayi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-lg bg-white/10 p-3 transition-colors hover:bg-white/20 dark:bg-slate-800/40 dark:hover:bg-slate-700/70"
+                >
+                  <FilePenLine className="h-5 w-5 text-slate-700 dark:text-slate-200" />
+                  <span>dev.to Blog</span>
                 </a>
               </div>
             </div>

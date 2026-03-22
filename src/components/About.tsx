@@ -1,4 +1,4 @@
-import { Moon, Sun, Target, Heart } from 'lucide-react';
+import { Moon, Sun, Target } from 'lucide-react';
 
 interface AboutProps {
   isDarkMode: boolean;
@@ -9,9 +9,9 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
   return (
     <section
       id="about"
-      className="section-shell pattern-zigzag py-20 px-6 sm:px-10 lg:px-16 transition-colors duration-500"
+      className="section-shell pattern-zigzag px-4 py-16 transition-colors duration-500 sm:px-8 lg:px-12"
     >
-      <div className="relative z-10 max-w-4xl">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
             bg-gradient-to-br from-blue-500/90 to-cyan-500/90
             backdrop-blur-md
             rounded-2xl
-            p-10
+            p-6 sm:p-8 lg:p-10
             text-white
             shadow-lg
             border border-white/10
@@ -77,7 +77,7 @@ export default function About({ isDarkMode, onThemeToggle }: AboutProps) {
               bg-white/70 dark:bg-slate-800/70
               backdrop-blur-md
               rounded-xl
-              p-7
+              p-6 sm:p-7
               border border-slate-200 dark:border-slate-700
               shadow-sm
               transition-all duration-300

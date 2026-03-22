@@ -16,6 +16,7 @@ function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [pointer, setPointer] = useState({ x: 50, y: 20 });
   const mainRef = useRef<HTMLElement | null>(null);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -127,9 +128,19 @@ function App() {
         />
       </div>
       
-      <Sidebar activeSection={activeSection} onSectionChange={handleSectionChange} />
+      <Sidebar
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+        isExpanded={isSidebarExpanded}
+        onToggleExpand={() => setIsSidebarExpanded((prev) => !prev)}
+      />
 
-      <main ref={mainRef} className="relative z-10 flex-1 overflow-y-auto scroll-smooth pt-24 pb-28 md:ml-80 md:pt-0 md:pb-0">
+      <main
+        ref={mainRef}
+        className={`relative z-10 flex-1 overflow-y-auto scroll-smooth pt-24 pb-28 md:pt-0 md:pb-0 ${
+          isSidebarExpanded ? 'md:ml-80' : 'md:ml-24'
+        }`}
+      >
         <div className="min-h-screen">
           <About isDarkMode={isDarkMode} onThemeToggle={handleThemeToggle} />
           <Skills />

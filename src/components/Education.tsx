@@ -48,7 +48,7 @@ export default function Education() {
                     ].map((course, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 bg-slate-100 text-slate-700 dark:text-slate-300 rounded-lg text-sm border border-slate-200 dark:border-slate-700"
+                        className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100"
                       >
                         {course}
                       </span>
@@ -62,7 +62,7 @@ export default function Education() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 hover:shadow-xl transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="bg-blue-100 p-3 rounded-lg">
+                <div className="rounded-lg bg-blue-100 p-3 dark:bg-blue-500/15">
                   <Award className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex-1">

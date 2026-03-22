@@ -1,6 +1,10 @@
 import { useMemo } from 'react';
 import {
   Briefcase,
+  ChevronLeft,
+  ChevronRight,
+  FileBadge2,
+  FilePenLine,
   GraduationCap,
   User,
   Mail,
@@ -37,6 +41,8 @@ const calculateExperience = () => {
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }
 
 const navItems = [
@@ -48,9 +54,15 @@ const navItems = [
   { id: 'contact', label: 'Contact', icon: Mail },
 ];
 
-export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+export default function Sidebar({
+  activeSection,
+  onSectionChange,
+  isExpanded,
+  onToggleExpand,
+}: SidebarProps) {
   const experience = useMemo(() => calculateExperience(), []);
   const activeNavItem = navItems.find(({ id }) => id === activeSection) ?? navItems[0];
+  const sidebarWidth = isExpanded ? 'w-80' : 'w-24';
 
   return (
     <>
@@ -80,11 +92,21 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         </div>
       </div>
 
-      <aside className="fixed left-0 top-0 hidden h-screen w-80 bg-gradient-to-b from-white via-slate-50 to-slate-100 text-slate-900 shadow-2xl transition-transform duration-300 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:text-white md:block">
+      <aside
+        className={`fixed left-0 top-0 hidden h-screen ${sidebarWidth} bg-gradient-to-b from-white via-slate-50 to-slate-100 text-slate-900 shadow-2xl transition-all duration-300 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:text-white md:block`}
+      >
         <div className="flex h-full flex-col">
-          <div className="border-b border-slate-200 bg-gradient-to-b from-white to-slate-100 p-8 dark:border-slate-700 dark:from-slate-900 dark:to-slate-800">
-            <div className="mb-6">
-              <div className="mx-auto mb-6 h-32 w-32 overflow-hidden rounded-full shadow-2xl">
+          <div
+            className={`border-b border-slate-200 bg-gradient-to-b from-white to-slate-100 dark:border-slate-700 dark:from-slate-900 dark:to-slate-800 ${
+              isExpanded ? 'p-8' : 'p-4'
+            }`}
+          >
+            <div className={`${isExpanded ? 'mb-6' : 'mb-3'}`}>
+              <div
+                className={`mx-auto overflow-hidden rounded-full shadow-2xl transition-all duration-300 ${
+                  isExpanded ? 'mb-6 h-32 w-32' : 'h-14 w-14'
+                }`}
+              >
                 <img
                   src={`${import.meta.env.BASE_URL}images/profile.jpg?v=${Date.now()}`}
                   alt="Karthik Korrayi"
@@ -92,11 +114,18 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                 />
               </div>
             </div>
-            <h1 className="mb-2 text-center text-3xl font-bold">Karthik Korrayi</h1>
-            <p className="mb-2 text-center text-sm font-semibold text-cyan-500">Associate IT Consultant</p>
-            <p className="text-center text-xs text-slate-500 dark:text-slate-400">
-              Platform Engineer • {experience} Experience
-            </p>
+            {isExpanded ? (
+              <>
+                <h1 className="mb-2 text-center text-3xl font-bold">Karthik Korrayi</h1>
+                <p className="mb-2 text-center text-sm font-semibold text-cyan-500">Associate IT Consultant</p>
+                <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+                  Platform Engineer • {experience} Experience
+                </p>
+              </>
+            ) : (
+              <p className="text-center text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-500">Karthik</p>
+            )}
+
           </div>
 
           <nav className="flex-1 space-y-2 px-4 py-8">
@@ -104,45 +133,60 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
               <button
                 key={id}
                 onClick={() => onSectionChange(id)}
-                className={`group flex w-full items-center gap-4 rounded-lg px-6 py-3 transition-all duration-300 ${
+                className={`group flex w-full items-center rounded-lg py-3 transition-all duration-300 ${
+                  isExpanded ? 'gap-4 px-6' : 'justify-center px-2'
+                } ${
                   activeSection === id
                     ? 'scale-105 bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg'
                     : 'text-slate-700 hover:bg-slate-200/80 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-700/50 dark:hover:text-white'
                 }`}
+                title={label}
               >
                 <Icon className="h-5 w-5 transition-transform group-hover:rotate-12" />
-                <span className="text-sm font-medium">{label}</span>
+                {isExpanded && <span className="text-sm font-medium">{label}</span>}
               </button>
             ))}
           </nav>
 
-          <div className="border-t border-slate-200 bg-gradient-to-t from-white to-slate-100 p-6 dark:border-slate-700 dark:from-slate-900 dark:to-slate-800">
-            <p className="mb-4 text-center text-xs text-slate-500 dark:text-slate-400">Connect With Me</p>
-            <div className="flex justify-center gap-4">
-              <a
-                href="https://linkedin.com/in/karthik-korrayi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-lg bg-slate-200 p-3 transition-all hover:scale-110 hover:bg-blue-600 dark:bg-slate-700"
+          <div
+            className={`border-t border-slate-200 bg-gradient-to-t from-white to-slate-100 dark:border-slate-700 dark:from-slate-900 dark:to-slate-800 ${
+              isExpanded ? 'p-6' : 'p-4'
+            }`}
+          >
+
+            <div className={`flex items-center gap-2 ${isExpanded ? '' : 'justify-center'}`}>
+              <button
+                onClick={() => window.open('https://drive.google.com/file/d/1FmGpjU4SV63frBhxu9O4ZBS3hmEiUuUm/view?usp=sharing', '_blank')}
+                className={`group flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-2 text-sm font-semibold text-white transition-all hover:shadow-lg ${
+                  isExpanded ? 'w-full' : 'w-14 text-xs'
+                }`}
+                title="Resume"
               >
-                <Linkedin className="h-5 w-5 group-hover:text-white" />
-              </a>
-              <a
-                href="https://github.com/karthikkorrayi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-lg bg-slate-200 p-3 transition-all hover:scale-110 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600"
-              >
-                <Github className="h-5 w-5 group-hover:text-white" />
-              </a>
+                <FileBadge2 className={`${isExpanded ? 'h-4 w-4' : 'h-3.5 w-3.5'}`} />
+                {isExpanded ? 'Resume' : ''}
+              </button>
+
+              {!isExpanded && (
+                <button
+                  onClick={onToggleExpand}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300/80 bg-white/70 text-slate-700 transition-all hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-700"
+                  aria-label="Expand sidebar"
+                  title="Expand"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              )}
             </div>
-            <a
-              href="mailto:karthikkorrayii@gmail.com"
-              className="group mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:shadow-lg"
-            >
-              <Mail className="h-4 w-4" />
-              Email Me
-            </a>
+            {isExpanded && (
+              <button
+                onClick={onToggleExpand}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium text-slate-700 transition-all hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-700"
+                aria-label="Collapse sidebar"
+                title="Compact"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </aside>

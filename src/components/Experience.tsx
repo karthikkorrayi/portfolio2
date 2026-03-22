@@ -70,8 +70,8 @@ export default function Experience() {
   ];
 
   return (
-    <section id="experience" className="section-shell pattern-grid py-16 px-6 sm:px-8 lg:px-12">
-      <div className="relative z-10 max-w-4xl">
+    <section id="experience" className="section-shell pattern-grid px-4 py-16 sm:px-8 lg:px-12">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="mb-12">
           <h2 className="mb-2 flex items-center gap-3 text-4xl font-bold text-slate-900 dark:text-slate-100">
             <div className="h-10 w-1 rounded-full bg-gradient-to-b from-blue-600 to-cyan-600"></div>
@@ -134,7 +134,7 @@ export default function Experience() {
                     {exp.technologies.map((tech, techIdx) => (
                       <span
                         key={techIdx}
-                        className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300"
+                        className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100"
                       >
                         {tech}
                       </span>
