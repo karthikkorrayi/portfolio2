@@ -78,15 +78,22 @@ jobs:
               await page.waitForTimeout(2000);
 
               console.log('Filling credentials...');
-              await page.fill('#username', process.env.LINKEDIN_EMAIL);
-              await page.waitForTimeout(500);
-              await page.fill('#password', process.env.LINKEDIN_PASSWORD);
-              await page.waitForTimeout(500);
-              await page.click('[type=submit]');
+              // Just inject the cookie directly
+              await context.addCookies([{
+                name: 'li_at',
+                value: process.env.LI_AT_COOKIE,
+                domain: '.linkedin.com',
+                path: '/',
+                httpOnly: true,
+                secure: true
+              }]);
 
-              console.log('Waiting for login...');
-              await page.waitForURL(url => !url.toString().includes('/login'), { timeout: 30000 });
-              await page.waitForTimeout(3000);
+              // Then go straight to your profile — already logged in
+              await page.goto('https://www.linkedin.com/in/karthik-korrayi/', {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+              });
+              await page.waitForTimeout(4000);
 
               const currentUrl = page.url();
               console.log('Current URL after login:', currentUrl);
@@ -178,8 +185,7 @@ jobs:
 
       - name: Run scraper
         env:
-          LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
-          LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
         run: node scraper.cjs
 
       - name: Upload debug screenshot on failure
