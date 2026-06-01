@@ -124,7 +124,13 @@ function downloadFile(fileUrl, outputPath) {
     imgUrl = imgUrl.replace(/scale_\d+_\d+/, 'scale_400_400');
     console.log('Downloading image from:', imgUrl);
 
-    await downloadFile(imgUrl, 'public/images/profile.jpg');
+    const imageResponse = await page.evaluate(async (url) => {
+        const res = await fetch(url);
+        const buffer = await res.arrayBuffer();
+        return Array.from(new Uint8Array(buffer));
+    }, imgUrl);
+
+    fs.writeFileSync('public/images/profile.jpg', Buffer.from(imageResponse));
 
     const stats = fs.statSync('public/images/profile.jpg');
     console.log('Downloaded file size:', stats.size, 'bytes');
