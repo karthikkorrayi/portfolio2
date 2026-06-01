@@ -27,17 +27,15 @@ jobs:
           npm install playwright
           npx playwright install chromium --with-deps
 
-      - name: Copy scraper script
-        run: cp scraper.cjs scraper_run.cjs
-
       - name: Run scraper
         env:
           LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
         run: node scraper_run.cjs
 
+
       - name: Upload debug screenshot on failure
         if: failure()
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debug-screenshot
           path: debug-screenshot.png
