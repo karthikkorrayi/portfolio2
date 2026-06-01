@@ -30,7 +30,7 @@ jobs:
       - name: Run scraper
         env:
           LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
-        run: node scraper_run.cjs
+        run: node scraper.cjs
 
 
       - name: Upload debug screenshot on failure
