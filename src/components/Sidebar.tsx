@@ -1,5 +1,4 @@
 import { Briefcase, ChevronLeft, ChevronRight, FileBadge2, GraduationCap, User, Mail, FolderKanban, Sparkles, Moon, Sun } from 'lucide-react';
-import resumePdf from '../../public/resume.pdf';
 
 interface SidebarProps {
   activeSection: string;
@@ -18,7 +17,7 @@ const navItems = [
   { id: 'contact', label: 'Contact', mobile: 'Contact', icon: Mail },
 ];
 
-const resumeUrl = resumePdf;
+const resumeUrl = `${import.meta.env.BASE_URL}resume.pdf`;
 export default function Sidebar({ activeSection, onSectionChange, isExpanded, onToggleExpand, isDarkMode, onThemeToggle }: SidebarProps) {
   const ThemeIcon = isDarkMode ? Moon : Sun;
   const themeButton = <button type="button" className="theme-button" onClick={onThemeToggle} aria-label="Dark mode" aria-pressed={isDarkMode}><ThemeIcon size={19} aria-hidden="true" /></button>;
