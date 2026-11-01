@@ -35,7 +35,7 @@ const getDurationLabel = (startDate: string, endDate?: string) => {
 export default function Experience() {
   const experiences: ExperienceEntry[] = [
     {
-      title: 'Associate IT Consultant',
+      title: 'DevOps Engineer',
       company: 'ITC Infotech',
       companyLogo: `${import.meta.env.BASE_URL}images/1631308626797.jpeg`,
       location: 'Hyderabad, Telangana, India',
