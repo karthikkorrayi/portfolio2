@@ -1,0 +1,18 @@
+[
+  {
+    "file": "src/components/Projects.tsx",
+    "previouslyExisted": true
+  },
+  {
+    "file": "src/components/ProjectCard.tsx",
+    "previouslyExisted": false
+  },
+  {
+    "file": "src/data/projects.ts",
+    "previouslyExisted": false
+  },
+  {
+    "file": "docs/projects-maintenance.md",
+    "previouslyExisted": false
+  }
+]
