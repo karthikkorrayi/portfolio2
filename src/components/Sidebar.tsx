@@ -16,7 +16,7 @@ const navItems = [
   { id: 'education', label: 'Education', mobile: 'Study', icon: GraduationCap },
   { id: 'contact', label: 'Contact', mobile: 'Contact', icon: Mail },
 ];
-const resumeUrl = 'public/resume.pdf';
+const resumeUrl = './public/resume.pdf';
 
 export default function Sidebar({ activeSection, onSectionChange, isExpanded, onToggleExpand, isDarkMode, onThemeToggle }: SidebarProps) {
   const ThemeIcon = isDarkMode ? Moon : Sun;
